@@ -1,0 +1,69 @@
+module Lexer
+
+type Token =
+    | LParen
+    | RParen
+    | NotOp
+    | AndOp
+    | OrOp
+    | ImpliesOp
+    | BiconditionalOp
+    | Variable of string
+    | Eof
+
+let lex (input: string) : Token list =
+    let mutable i = 0
+    let chars = input.ToCharArray()
+
+    let peek (offset: int) : char option =
+        if i + offset < chars.Length then
+            Some chars.[i + offset]
+        else
+            None
+
+    let advance (count: int) = i <- i + count
+
+    let rec loop (acc: Token list) : Token list =
+        if i >= chars.Length then
+            List.rev (Eof :: acc)
+        else
+            match chars.[i] with
+            | ' '
+            | '\t'
+            | '\n'
+            | '\r' ->
+                advance 1
+                loop acc
+            | '(' ->
+                advance 1
+                loop (LParen :: acc)
+            | ')' ->
+                advance 1
+                loop (RParen :: acc)
+            | '!' ->
+                advance 1
+                loop (NotOp :: acc)
+            | '&' ->
+                advance 1
+                loop (AndOp :: acc)
+            | '|' ->
+                advance 1
+                loop (OrOp :: acc)
+            | '-' ->
+                if peek 1 = Some '>' then
+                    advance 2
+                    loop (ImpliesOp :: acc)
+                else
+                    failwithf "Lexer error: Unexpected character '%c' at position %d. Expected '->'." chars.[i] i
+            | '<' ->
+                if peek 1 = Some '-' && peek 2 = Some '>' then
+                    advance 3
+                    loop (BiconditionalOp :: acc)
+                else
+                    failwithf "Lexer error: Unexpected character '%c' at position %d. Expected '<->'." chars.[i] i
+            | c when System.Char.IsLetter c && System.Char.IsUpper c ->
+                advance 1
+                loop (Variable(string c) :: acc)
+            | c -> failwithf "Lexer error: Unexpected character '%c' at position %d" c i
+
+    loop []
