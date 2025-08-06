@@ -1,13 +1,7 @@
-﻿let debug (formula : string) (tokens : Lexer.Token list) (expression : Parser.Expression) =
-    printfn "- Formula:"
-    printfn "  - %s" formula
-    
-    printfn "- Tokens:"
-    for token in tokens do
-        printfn "  - %A" token
-    
-    printfn "- Expression:"
-    printfn "  - %A" expression
+﻿let debug (formula: string) (tokens: Lexer.Token list) (expression: Parser.Expression) =
+    printfn "- Formula:\n  - %s\n" formula
+    printfn "- Tokens:\n%s\n" (tokens |> List.map (fun t -> "  - " + string t) |> String.concat "\n")
+    printfn "- Expression:\n  - %s" (string expression)
 
 [<EntryPoint>]
 let main argv =
@@ -16,13 +10,13 @@ let main argv =
     printfn ""
 
     try
-        let tokens = Lexer.lex input
-        let expression = Parser.parse tokens
+        let tokens = input |> Lexer.lex
+        let expression = tokens |> Parser.parse
 
         if argv.Length > 0 && argv.[0] = "--debug" then
-            debug input tokens expression
+            (input, tokens, expression) |||> debug
         else
-            Evaluator.generateAndPrintTruthTable expression input
+            (expression, input) ||> Evaluator.generateAndPrintTruthTable
     with ex ->
         eprintfn "Error: %s" ex.Message
 
