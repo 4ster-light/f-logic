@@ -2,10 +2,11 @@
     printfn "- Formula:\n  - %s\n" formula
     printfn "- Tokens:\n%s\n" (tokens |> List.map (fun t -> "  - " + string t) |> String.concat "\n")
     printfn "- Expression:\n  - %s" (string expression)
+    printfn ""
 
 [<EntryPoint>]
 let main argv =
-    printfn "Enter a logical formula (e.g., P & Q -> R, !A | B):\n"
+    printfn "\nEnter a logical formula (e.g., P & Q -> R, !A | B):\n"
     let input = System.Console.ReadLine()
     printfn ""
 
@@ -17,6 +18,7 @@ let main argv =
             (input, tokens, expression) |||> debug
         else
             (expression, input) ||> Evaluator.generateAndPrintTruthTable
+            printfn ""
     with ex ->
         eprintfn "Error: %s" ex.Message
 

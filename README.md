@@ -20,15 +20,14 @@ logic symbols.
 The choice of interpreting logic formulas was made due to its relative
 simplicity and the fact that it is related to computer science.
 
-This second tutorial (which you can find
-[here](https://aster.deno.dev/posts/introduction-to-interpreters-part-2/)) is
+This second tutorial is
 written in F# in order to learn about the language and showcase why functional
 programming is a good choice for this kind of project, due to its strong
 algebraic data types and common patterns like recursion and pattern matching.
 You can find the Python version (easier and more readable for beginners) of this
 project [here](https://github.com/4ster-light/py-logic) with the corresponding
 tutorial
-[here](https://aster.deno.dev/posts/introduction-to-interpreters-part-1/).
+[here](https://aster.deno.dev/posts/introduction-to-interpreters/).
 
 ## 🛠 Usage
 
@@ -36,6 +35,7 @@ tutorial
 
 ```bash
 $ dotnet run
+
 Enter a logical formula (e.g., P & Q -> R, !A | B):
 
 P & Q -> R
@@ -56,6 +56,7 @@ F | F | F | T
 
 ```bash
 $ dotnet run -- --debug
+
 Enter a logical formula (e.g., P & Q -> R, !A | B):
 
 P & Q -> R

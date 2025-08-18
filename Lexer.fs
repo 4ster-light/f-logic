@@ -28,10 +28,7 @@ let lex (input: string) : Token list =
             List.rev (Eof :: acc)
         else
             match chars.[i] with
-            | ' '
-            | '\t'
-            | '\n'
-            | '\r' ->
+            | char when char |> System.Char.IsWhiteSpace ->
                 advance 1
                 loop acc
             | '(' ->
@@ -61,9 +58,9 @@ let lex (input: string) : Token list =
                     loop (BiconditionalOp :: acc)
                 else
                     failwithf "Lexer error: Unexpected character '%c' at position %d. Expected '<->'." chars.[i] i
-            | c when System.Char.IsLetter c && System.Char.IsUpper c ->
+            | char when char |> System.Char.IsLetter && char |> System.Char.IsUpper ->
                 advance 1
-                loop (Variable(string c) :: acc)
-            | c -> failwithf "Lexer error: Unexpected character '%c' at position %d" c i
+                loop (Variable(string char) :: acc)
+            | char -> failwithf "Lexer error: Unexpected character '%c' at position %d" char i
 
     loop []
