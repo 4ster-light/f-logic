@@ -17,8 +17,8 @@ let mutable currentTokens: Token list = []
 let consume (expected: Token) =
     match currentTokens with
     | head :: tail when head = expected -> currentTokens <- tail
-    | head :: _ -> failwithf "Parser error: Expected %A but found %A" expected head
-    | [] -> failwithf "Parser error: Expected %A but reached end of input" expected
+    | head :: _ -> failwithf $"Parser error: Expected {expected} but found {head}"
+    | [] -> failwithf $"Parser error: Expected {expected} but reached end of input"
 
 let peek () : Token =
     match currentTokens with
@@ -35,7 +35,7 @@ let rec parsePrimary () : Expression =
         let expr = parseBiconditional ()
         consume RParen
         expr
-    | _ -> failwithf "Parser error: Expected variable or '(' but found %A" (peek ())
+    | _ -> failwithf $"Parser error: Expected variable or '(' but found {peek ()}"
 
 and parseNot () : Expression =
     if peek () = NotOp then
@@ -89,6 +89,6 @@ let parse (tokens: Token list) : Expression =
     let expr = parseBiconditional ()
 
     if peek () <> Eof then
-        failwithf "Parser error: Unexpected tokens remaining after parsing: %A" currentTokens
+        failwithf $"Parser error: Unexpected tokens remaining after parsing: {currentTokens}"
 
     expr

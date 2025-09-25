@@ -17,7 +17,7 @@ let lex (input: string) : Token list =
 
     let peek (offset: int) : char option =
         if i + offset < chars.Length then
-            Some chars.[i + offset]
+            Some chars[i + offset]
         else
             None
 
@@ -27,7 +27,7 @@ let lex (input: string) : Token list =
         if i >= chars.Length then
             List.rev (Eof :: acc)
         else
-            match chars.[i] with
+            match chars[i] with
             | char when char |> System.Char.IsWhiteSpace ->
                 advance 1
                 loop acc
@@ -51,16 +51,16 @@ let lex (input: string) : Token list =
                     advance 2
                     loop (ImpliesOp :: acc)
                 else
-                    failwithf "Lexer error: Unexpected character '%c' at position %d. Expected '->'." chars.[i] i
+                    failwithf $"Lexer error: Unexpected character '{chars[i]}' at position {i}. Expected '->'."
             | '<' ->
                 if peek 1 = Some '-' && peek 2 = Some '>' then
                     advance 3
                     loop (BiconditionalOp :: acc)
                 else
-                    failwithf "Lexer error: Unexpected character '%c' at position %d. Expected '<->'." chars.[i] i
+                    failwithf $"Lexer error: Unexpected character '{chars[i]}' at position {i}. Expected '<->'."
             | char when char |> System.Char.IsLetter && char |> System.Char.IsUpper ->
                 advance 1
                 loop (Variable(string char) :: acc)
-            | char -> failwithf "Lexer error: Unexpected character '%c' at position %d" char i
+            | char -> failwithf $"Lexer error: Unexpected character '{char}' at position {i}"
 
     loop []
